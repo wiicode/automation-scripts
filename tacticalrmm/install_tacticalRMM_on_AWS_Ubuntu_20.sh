@@ -41,7 +41,6 @@ echo "CERT_PRIV_KEY=$(sudo base64 -w 0 /etc/letsencrypt/live/$APP_HOST/privkey.p
 
 #docker time
 apt-get update -y
-apt-get remove docker docker-engine docker.io containerd runc -y
 
 apt-get install \
     apt-transport-https \
@@ -57,6 +56,4 @@ echo \
   $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 
 apt-get update -y
-apt-get install docker-ce docker-ce-cli containerd.io -y
-snap install docker
-apt install docker-compose -y
+apt-get install docker-ce docker-ce-cli containerd.io docker-compose -y
