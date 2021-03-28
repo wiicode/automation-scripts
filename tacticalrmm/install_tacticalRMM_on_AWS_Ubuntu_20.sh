@@ -6,25 +6,19 @@ if [ "$EUID" -ne 0 ]
 fi
 
 #setup working directory
-mv /opt/tacticamrmm/ /opt/tacticalrmm_$(date +%d-%m-%Y) 2>/dev/null; true
-mkdir /opt/tacticalrmm
-chmod 777 /opt/tacticalrmm
+mkdir -p "/opt/tacticalrmm"
+chmod 777 "/opt/tacticalrmm"
 
 #prepare URLs
 read -p "Enter the APP_HOST DNS address (app.example.com): " APP_HOST
 read -p "Enter the API_HOST DNS address (api.example.com): " API_HOST
 read -p "Enter the MESH_HOST DNS address (mesh.example.com): " MESH_HOST
 
-#LetsEncrypt
-apt-get update -y
-apt install certbot python3-certbot-apache -y
-certbot certonly --manual -d $APP_HOST --agree-tos --no-bootstrap --manual-public-ip-logging-ok --preferred-challenges dns
-
 #Prepare Config Files
 wget -N https://raw.githubusercontent.com/wh1te909/tacticalrmm/master/docker/docker-compose.yml -P "/opt/tacticalrmm/"
 wget -N https://raw.githubusercontent.com/wh1te909/tacticalrmm/master/docker/.env.example -P "/opt/tacticalrmm/"
-mv /opt/tacticalrmm/.env .env_$(date +%Y-%m-%d-%H-%M-%S)
-mv /opt/tacticalrmm/.env.example .env
+mv /opt/tacticalrmm/.env /opt/tacticalrmm/.env_$(date +%Y-%m-%d-%H-%M-%S)
+mv /opt/tacticalrmm/.env.example /opt/tacticalrmm/.env
 
 # Assign the filename
 filename="/opt/tacticalrmm/.env"
@@ -35,6 +29,10 @@ search3="mesh.example.com"
 sed -i "s/$search1/$APP_HOST/" $filename
 sed -i "s/$search2/$API_HOST/" $filename
 sed -i "s/$search3/$MESH_HOST/" $filename
+#LetsEncrypt
+apt-get update -y
+apt install certbot python3-certbot-apache -y
+certbot certonly --manual -d $APP_HOST --agree-tos --no-bootstrap --manual-public-ip-logging-ok --preferred-challenges dns
 
 #FUTURE WARNING: you must keep these entries clean in .ENV.
 echo "CERT_PUB_KEY=$(sudo base64 -w 0 /etc/letsencrypt/live/$APP_HOST/fullchain.pem)" >> /opt/tacticalrmm/.env
