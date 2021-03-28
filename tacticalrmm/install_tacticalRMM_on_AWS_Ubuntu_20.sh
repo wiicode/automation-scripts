@@ -31,7 +31,8 @@ sed -i "s/$search2/$API_HOST/" $filename
 sed -i "s/$search3/$MESH_HOST/" $filename
 #LetsEncrypt
 apt-get update -y
-apt install certbot python3-certbot-apache -y
+#apt install certbot python3-certbot-apache -y
+apt install certbot -y
 certbot certonly --manual -d $APP_HOST --agree-tos --no-bootstrap --manual-public-ip-logging-ok --preferred-challenges dns
 
 #FUTURE WARNING: you must keep these entries clean in .ENV.
