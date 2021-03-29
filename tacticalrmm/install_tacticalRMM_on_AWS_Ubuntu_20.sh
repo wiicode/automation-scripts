@@ -33,7 +33,7 @@ sed -i "s/$search3/$MESH_HOST/" $filename
 apt-get update -y
 #apt install certbot python3-certbot-apache -y
 apt install certbot -y
-certbot certonly --manual -d $APP_HOST --agree-tos --no-bootstrap --manual-public-ip-logging-ok --preferred-challenges dns
+certbot certonly --manual -d $APP_HOST -d $API_HOST -d $MESH_HOST --agree-tos --no-bootstrap --manual-public-ip-logging-ok --preferred-challenges dns
 
 #FUTURE WARNING: you must keep these entries clean in .ENV.
 echo "CERT_PUB_KEY=$(sudo base64 -w 0 /etc/letsencrypt/live/$APP_HOST/fullchain.pem)" >> /opt/tacticalrmm/.env
